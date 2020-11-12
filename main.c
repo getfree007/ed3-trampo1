@@ -3,15 +3,8 @@
 #include <string.h>
 #include "fornecido.h"
 #include "LDED.h"
-
+//poo
 //Estrutura que iguala a um registro do arquivo pessoa
-struct regPessoa{
-    int RRN;
-    int id;
-    char nome[40];
-    int idade;
-    char username[15];
-};
 
 
 int cabecalhoPessoa(FILE *arqW){//Basicamente inicializa o cabeçalho do arquivo Pessoa
