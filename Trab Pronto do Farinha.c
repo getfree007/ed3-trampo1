@@ -1,10 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
 #include "fornecido.h"
 #include "LDED.h"
-//poo
+
 //Estrutura que iguala a um registro do arquivo pessoa
+struct regPessoa{
+    int RRN;
+    int id;
+    char nome[40];
+    int idade;
+    char username[15];
+};
+
 
 
 int cabecalhoPessoa(FILE *arqW){//Basicamente inicializa o cabeçalho do arquivo Pessoa
@@ -24,6 +34,7 @@ int cabecalhoPessoa(FILE *arqW){//Basicamente inicializa o cabeçalho do arquivo
     
     return OK;
 }
+
 
 /*Essa funcao printa os registros no formado especificado
 na segunda funcionalidade*/
@@ -176,6 +187,7 @@ int main(){
         trim(nomeArqRead);
         trim(nomeArqWrite);
         trim(nomeArqIndex);
+
 
         FILE *arqR = fopen(nomeArqRead, "r");
         FILE *arqW = fopen(nomeArqWrite, "wb");
