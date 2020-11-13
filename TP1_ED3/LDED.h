@@ -7,17 +7,26 @@
 #define OK         1
 #define ERRO       0
 
+
+struct regPessoa{
+    int existencia;
+    int idPessoa;
+    char nomePessoa[40];
+    int idadePessoa;
+    char twitterPessoa[15];
+};
+
 // TAD já pronta de desenvolvida em ED1 
 //SSC0603 - Estrutura de Dados 1 (ED1 - 2020 2o. Sem - Prof. Fernando Santos OSÓRIO )
 // http://wiki.icmc.usp.br/index.php/SSC0603_Material_Aulas_2020(fosorio)
 
 
-struct regPessoa{
+struct registroPessoa{
     int RRN;
-    int id;
-    char nome[40];
-    int idade;
-    char username[15];
+    int idPessoa;
+    char nomePessoa[40];
+    int idadePessoa;
+    char twitterPessoa[15];
 };
 
 //Definição do tipo lista

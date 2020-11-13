@@ -4,3 +4,12 @@
 
 #include "LDED.h"
 #include "fornecido.h"
+
+ #define lixo = '$'
+ #define nulo = '-'
+
+
+
+void main (){
+
+}
