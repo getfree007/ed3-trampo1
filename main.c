@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "LDED.h"
-
+//
 int main()
 {
     Tipo_Dado_Int *dadoint;

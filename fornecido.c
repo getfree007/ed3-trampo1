@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <ctype.h>
 
-
-
 /*
 * Abaixo seguem funções que fazem a escrita do binário em "stdout" (tela) pra poder ser comparado no run.codes.
 *
