@@ -1,5 +1,4 @@
 // Arquivo LDED.h - Lista Dinamica Encadeada Dupla
-// LDED para dados tipo Void * [Multiplos tipos de dados diferentes em um só TAD]
 
 #define FALSO      0
 #define VERDADEIRO 1
@@ -7,27 +6,10 @@
 #define OK         1
 #define ERRO       0
 
-
-struct regPessoa{
-    int existencia;
-    int idPessoa;
-    char nomePessoa[40];
-    int idadePessoa;
-    char twitterPessoa[15];
-};
-
 // TAD já pronta de desenvolvida em ED1 
 //SSC0603 - Estrutura de Dados 1 (ED1 - 2020 2o. Sem - Prof. Fernando Santos OSÓRIO )
 // http://wiki.icmc.usp.br/index.php/SSC0603_Material_Aulas_2020(fosorio)
 
-
-struct registroPessoa{
-    int RRN;
-    int idPessoa;
-    char nomePessoa[40];
-    int idadePessoa;
-    char twitterPessoa[15];
-};
 
 //Definição do tipo lista
 struct elemento{
