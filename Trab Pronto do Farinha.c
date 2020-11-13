@@ -6,7 +6,7 @@
 #include "fornecido.h"
 #include "LDED.h"
 
-//Estrutura que iguala a um registro do arquivo pessoa
+//Estrutura que iguala a um registro do arquivo pessoa.
 struct regPessoa{
     int RRN;
     int id;
