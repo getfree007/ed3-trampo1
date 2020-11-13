@@ -7,24 +7,18 @@
 #define OK         1
 #define ERRO       0
 
-// 3 tipos de dados diferentes para uso nas listas
+// TAD já pronta de desenvolvida em ED1 
+//SSC0603 - Estrutura de Dados 1 (ED1 - 2020 2o. Sem - Prof. Fernando Santos OSÓRIO )
+// http://wiki.icmc.usp.br/index.php/SSC0603_Material_Aulas_2020(fosorio)
 
-// Tipo 1
-typedef struct {
-    int Num;
-}  Tipo_Dado_Int;
 
-// Tipo 2
-typedef struct {
-    double Valor;
-}  Tipo_Dado_Double;
-
-// Tipo 3
-typedef struct {
-    int N;
-    double V;
-    char Txt[10];
-}  Tipo_Dado_Reg;
+struct regPessoa{
+    int RRN;
+    int id;
+    char nome[40];
+    int idade;
+    char username[15];
+};
 
 //Definição do tipo lista
 struct elemento{

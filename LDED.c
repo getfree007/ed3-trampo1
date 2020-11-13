@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "LDED.h" //inclui os Protótipos
+#include "LDED.h"
+
+// TAD jÃ¡ pronta de desenvolvida em ED1 
+//SSC0603 - Estrutura de Dados 1 (ED1 - 2020 2o. Sem - Prof. Fernando Santos OSÃ“RIO )
+// http://wiki.icmc.usp.br/index.php/SSC0603_Material_Aulas_2020(fosorio)
 
 Lista* cria_lista()
 {
@@ -39,7 +43,7 @@ int insere_lista_final(Lista* li, void *dt)
     no->prox = NULL;
 
 	if ((*li) == NULL)
-	{   //lista vazia: insere início
+	{   //lista vazia: insere inï¿½cio
         no->ant = NULL;
         *li = no;
     }else
@@ -68,7 +72,7 @@ int insere_lista_inicio(Lista* li, void *dt)
     no->prox = (*li);
     no->ant = NULL;
 
-	if (*li != NULL) //lista não vazia: apontar para o anterior!
+	if (*li != NULL) //lista nï¿½o vazia: apontar para o anterior!
         (*li)->ant = no;
     *li = no;
     return OK;
