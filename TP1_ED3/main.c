@@ -7,14 +7,9 @@
 
     static char lixo = '$';
     static char nulo = '-';
+    static char finalString = '\0';
     static int TAM = 64;
-
-typedef struct {
-
-    char status;
-    int quantidadePessoas;
-
-}cabecalhoAquivo;
+    int ultimoRRN = 1;
 
 typedef struct {
 
@@ -112,8 +107,35 @@ void inserirBinario(struct registroPessoa input,FILE *aquivo, Lista* lista){
         return ERRO;
     }
 
+    char statusOFF = '1';
+    char statusON = '0';
+    char removido = '1';
+    
     rewind(arquivo);
-
+    fwrite(&statusOFF, sizeof(char), 1 , arquivo);
+    fwrite(&ultimoRRN, sizeof(int), 1, arquivo);
+    //
+    fseek(arquivo, (input.RRN+1) * TAM, SEEK_SET);
+    //escrevendo campo removido como 1 (para indicar que o registro não está marcado como removido)
+    fwrite(&removido, sizeof(char), 1, arquivo);
+    //escrevendo idPessoa
+    fwrite(&input.idPessoa, sizeof(int), 1, arquivo);
+    //escrevendo nomePessoa e completando o que falta dos 40bytes com '$' 
+    fwrite(input.nome, sizeof(char), strlen(dados.nome), arquivo);
+    for(int i=0; i < 40 - strlen(input.nomePessoa) - 1; i++){//Preenche o resto do campo de lixo
+        fwrite(&lixo, sizeof(char), 1, arquivo);
+    }
+    //escrevendo idadePessoa
+    fwrite(&input.idadePessoa, sizeof(int), 1, arqW);
+    ///escrevendo twitterPessoa e completando o que falta dos 15bytes com '$'
+    fwrite(input.twitterPessoa, strlen(dinput.twitterPessoa)+1, 1, arqW);
+    for(int i=0; i < 15 - strlen(input.twitterPessoa) - 1; i++){//Preenche o resto do campo de lixo
+        fwrite(&lixo, sizeof(char), 1, arquivo);
+    }
+    //
+    insere_lista_ordenada(lista, input.idPessoa, input.RRN);
+    rewind(arquivo);
+    fwrite(&statusON, sizeof(char), 1 , arquivo);
 
     return OK;
 }
