@@ -19,7 +19,6 @@
 */
 
 
-
 void binarioNaTela1(char *nomeArquivoBinario, char *nomeArquivoIndice) {
 
 	/* Use essa função para comparação no run.codes. Lembre-se de ter fechado (fclose) o arquivo anteriormente.
