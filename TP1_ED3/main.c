@@ -81,28 +81,24 @@ int lerBinario (FILE* arquivo){
         for (int i = quantidadePessoas; i > 0; i--){
             fseek(arquivo, (byteOfSetJump + 1) * TAM, SEEK_SET);
             fread(&removido, sizeof(char), 1, arquivo); 
-                // alocando uma struct do tipo 'registroPessoa' criada dianmicamente
-                struct registroPessoa *input = (struct registroPessoa*)calloc(1, sizeof(struct registroPessoa));
+            // alocando uma struct do tipo 'registroPessoa' criada dianmicamente
+            struct registroPessoa *input = (struct registroPessoa*)calloc(1, sizeof(struct registroPessoa));
                 
-                //trasnferindo dados para struct
-                fread(&input->idPessoa, sizeof(int), 1, arquivo);
-                fread(input->nomePessoa, sizeof(char), 40, arquivo);
-                fread(&input->idadePessoa, sizeof(int), 1, arquivo);
-                fread(input->twitterPessoa, sizeof(char), 15, arquivo);
+            //trasnferindo dados para struct
+            fread(&input->idPessoa, sizeof(int), 1, arquivo);
+            fread(input->nomePessoa, sizeof(char), 40, arquivo);
+            fread(&input->idadePessoa, sizeof(int), 1, arquivo);
+            fread(input->twitterPessoa, sizeof(char), 15, arquivo);
 
-                if (removido == '1'){
-                    imprimeRegistro(input); // imprimir arquivo caso não tenha sido excluido
-                }
-                free (input); // libera alocaçao
+            if (removido == '1'){
+                imprimeRegistro(input); // imprimir arquivo caso não tenha sido excluido
             }
+            free (input); // libera alocaçao
             byteOfSetJump++;      
         }
         break;
-    }
-    
-    
-   
-
+    } 
+    fseek(arquivo, TAM, SEEK_SET);
     return OK;
 }
 
@@ -119,21 +115,39 @@ void inserirBinario(struct registroPessoa, FILE *aquivo, Lista* lista){
 }
 
 //Função que escreve cria o cabeçalho inicial com "0" pessoas e status "0" (ou seja arquivo inconsistente, pq não há pessoas) 
-int criarCabecalho(FILE *arquivo){
-    if(arqW == NULL){
+int criarCabecalhoPessoa(FILE *arquivo){
+    if(arquivo == NULL){
         printf("Falha no carregamento do arquivo.");
         return ERRO;
     }
 
     rewind(arquivo);
 
-    cabecalhoAquivo->status = 0;
-    fwrite(&cabecalhoAquivo->status, sizeof(char), 1, arquivo);
+    int status = 0;
+    fwrite(&status, sizeof(char), 1, arquivo);
 
-    cabecalhoAquivo->quantidadePessoas = 0;
-    fwrite(&cabecalhoAquivo->quantidadePessoas, sizeof(int), 1, arquivo);
+    int quantidadePessoas = 0;
+    fwrite(&quantidadePessoas, sizeof(int), 1, arquivo);
 
     for(int i=0; i<59; i++){        
+        fwrite(&lixo, sizeof(char), 1, arquivo);
+    }
+
+    return OK;
+}
+
+int criarCabecalhoIndex(FILE *arquivo){
+    if(arquivo == NULL){
+        printf("Falha no carregamento do arquivo.");
+        return ERRO;
+    }
+
+    rewind(arquivo);
+
+    int status = 0;
+    fwrite(status, sizeof(char), 1, arquivo);
+
+    for(int i=0; i<7; i++){        
         fwrite(&lixo, sizeof(char), 1, arquivo);
     }
 
