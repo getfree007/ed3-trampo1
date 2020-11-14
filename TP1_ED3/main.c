@@ -16,7 +16,6 @@ typedef struct {
 
 }cabecalhoAquivo;
 
-
 typedef struct {
 
     char removido;
