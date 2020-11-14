@@ -5,9 +5,9 @@
 #include "LDED.h"
 #include "fornecido.h"
 
-    char lixo = '$';
-    char nulo = '-';
-    int TAM = 64;
+    static char lixo = '$';
+    static char nulo = '-';
+    static int TAM = 64;
 
 typedef struct {
 
@@ -60,7 +60,7 @@ void imprimeRegistro(struct registroPessoa *registro){
     printf ("\n");
 }
 
-//Funcao que recebe um arquivo Bin para leitura 
+//Funcao que recebe um arquivo Bin para leitura e 
 int lerBinario (FILE* arquivo){
 
     char status, removido;
@@ -81,22 +81,19 @@ int lerBinario (FILE* arquivo){
         for (int i = quantidadePessoas; i > 0; i--){
             fseek(arquivo, (byteOfSetJump + 1) * TAM, SEEK_SET);
             fread(&removido, sizeof(char), 1, arquivo); 
-
-            if (removido == '1'){
-                // caso o dado não tenha sido removido ele vai inserir numa struct criada dianmicamente
+                // alocando uma struct do tipo 'registroPessoa' criada dianmicamente
                 struct registroPessoa *input = (struct registroPessoa*)calloc(1, sizeof(struct registroPessoa));
+                
+                //trasnferindo dados para struct
+                fread(&input->idPessoa, sizeof(int), 1, arquivo);
+                fread(input->nomePessoa, sizeof(char), 40, arquivo);
+                fread(&input->idadePessoa, sizeof(int), 1, arquivo);
+                fread(input->twitterPessoa, sizeof(char), 15, arquivo);
 
-                fread(&input->idPessoa, sizeof(int), 1, arqR);
-                fread(input->nomePessoa, sizeof(char), 40, arqR);
-                fread(&input->idadePessoa, sizeof(int), 1, arqR);
-                fread(input->twitterPessoa, sizeof(char), 15, arqR);
-
-                imprimeRegistro(input); // imprimir arquivo
+                if (removido == '1'){
+                    imprimeRegistro(input); // imprimir arquivo caso não tenha sido excluido
+                }
                 free (input); // libera alocaçao
-            }else if(removido == '0'){
-                /*
-                    dado foi removido* nao faz nada ?
-                */
             }
             byteOfSetJump++;      
         }
@@ -110,7 +107,7 @@ int lerBinario (FILE* arquivo){
 }
 
 
-//Funcao que inserer os dados de todos os reginstros em um arquivo
+//Funcao que insere dados de todos os reginstros em um arquivo
 void inserirBinario(struct registroPessoa, FILE *aquivo, Lista* lista){
     if(arquivo == NULL){
         printf("Falha no carregamento do arquivo.\n");
