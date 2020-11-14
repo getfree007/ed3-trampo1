@@ -5,9 +5,9 @@
 #include "LDED.h"
 #include "fornecido.h"
 
-    #define lixo = '$'
-    #define nulo = '-';
-    #define TAM = 64;
+    char lixo = '$';
+    char nulo = '-';
+    int TAM = 64;
 
 typedef struct {
 
@@ -64,7 +64,7 @@ void imprimeRegistro(struct registroPessoa *registro){
 int lerBinario (FILE* arquivo){
 
     char status, removido;
-    int quantidadePessoas, j = 0;
+    int quantidadePessoas,  byteOfSetJump = 0;
 
     rewind(arquivo);
 
@@ -79,12 +79,26 @@ int lerBinario (FILE* arquivo){
         fread(&quantidadePessoas, sizeof(int), 1, arq);
         fseek(arqR, TAM, SEEK_SET); // posiciona a leitora no final do lixo '$' do cabeçalho
         for (int i = quantidadePessoas; i > 0; i--){
-            fseek(arquivo, (j + 1) * TAM, SEEK_SET);
+            fseek(arquivo, (byteOfSetJump + 1) * TAM, SEEK_SET);
             fread(&removido, sizeof(char), 1, arquivo); 
 
             if (removido == '1'){
+                // caso o dado não tenha sido removido ele vai inserir numa struct criada dianmicamente
+                struct registroPessoa *input = (struct registroPessoa*)calloc(1, sizeof(struct registroPessoa));
 
-            }       
+                fread(&input->idPessoa, sizeof(int), 1, arqR);
+                fread(input->nomePessoa, sizeof(char), 40, arqR);
+                fread(&input->idadePessoa, sizeof(int), 1, arqR);
+                fread(input->twitterPessoa, sizeof(char), 15, arqR);
+
+                imprimeRegistro(input); // imprimir arquivo
+                free (input); // libera alocaçao
+            }else if(removido == '0'){
+                /*
+                    dado foi removido* nao faz nada ?
+                */
+            }
+            byteOfSetJump++;      
         }
         break;
     }
