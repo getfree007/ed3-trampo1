@@ -16,6 +16,7 @@ typedef struct {
 
 }cabecalhoAquivo;
 
+
 typedef struct {
 
     char removido;
@@ -25,6 +26,7 @@ typedef struct {
     char twitterPessoa[15]
 
 }registroPessoa
+
 
 //Funcao para imprimir todos os dados de um registro
 void imprimeRegistro(struct registroPessoa *registro){
@@ -60,9 +62,10 @@ void imprimeRegistro(struct registroPessoa *registro){
     printf ("\n");
 }
 
+
 //Funcao que recebe um arquivo Bin para leitura e 
 int lerBinario (FILE* arquivo){
-
+        //funcionalidade 2
     char status, removido;
     int quantidadePessoas,  byteOfSetJump = 0;
 
@@ -103,16 +106,19 @@ int lerBinario (FILE* arquivo){
 }
 
 
-//Funcao que insere dados de todos os reginstros em um arquivo
-void inserirBinario(struct registroPessoa, FILE *aquivo, Lista* lista){
+//Funcao que insere dados de todos os registros em um arquivo
+void inserirBinario(struct registroPessoa input,FILE *aquivo, Lista* lista){
     if(arquivo == NULL){
         printf("Falha no carregamento do arquivo.\n");
         return ERRO;
     }
 
+    rewind(arquivo);
+
 
     return OK;
 }
+
 
 //Função que escreve cria o cabeçalho inicial com "0" pessoas e status "0" (ou seja arquivo inconsistente, pq não há pessoas) 
 int criarCabecalhoPessoa(FILE *arquivo){
@@ -135,6 +141,7 @@ int criarCabecalhoPessoa(FILE *arquivo){
 
     return OK;
 }
+
 
 int criarCabecalhoIndex(FILE *arquivo){
     if(arquivo == NULL){

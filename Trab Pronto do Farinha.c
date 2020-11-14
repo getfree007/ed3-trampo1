@@ -114,6 +114,7 @@ void escreveBin(struct regPessoa dados, FILE *arqW, Lista* li){
     int i;//Para os loops
     int numReg = (dados.RRN + 1);//quantidade de registros
 
+
     //Atualiza os campos status e numero de registros do cabecalho
     fwrite(&status, sizeof(char), 1 , arqW);
     fwrite(&numReg, sizeof(int), 1, arqW);

@@ -7,13 +7,12 @@
 #define OK           0
 
 
-typedef struct {
+typedef struct indexaPessoa{
 
-    int indexPessoa;
     int idPessoa;
     int RRN;
 
-}indexaPessoa
+}indexaPessoa;
 
 /*
 
@@ -25,7 +24,7 @@ typedef struct {
 
 struct elemento{
     struct elemento *ant;
-    void *dado;
+    indexaPessoa dado;
     struct elemento *prox;
 };
 
