@@ -3,9 +3,11 @@
 
 #include "LDED.h"
 
-// TAD já pronta de desenvolvida em ED1 
-//SSC0603 - Estrutura de Dados 1 (ED1 - 2020 2o. Sem - Prof. Fernando Santos OSÓRIO )
-// http://wiki.icmc.usp.br/index.php/SSC0603_Material_Aulas_2020(fosorio)
+/*
+    TAD já pronta de desenvolvida em ED1 
+    SSC0603 - Estrutura de Dados 1 (ED1 - 2020 2o. Sem - Prof. Fernando Santos OSÓRIO )
+    http://wiki.icmc.usp.br/index.php/SSC0603_Material_Aulas_2020(fosorio)
+*/
 
 Lista* cria_lista()
 {
