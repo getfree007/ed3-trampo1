@@ -188,11 +188,69 @@ int main (){
 
     int funcionalidade;
     scanf("%d", &funcionalidade);
-/* 
+ 
     switch (funcionalidade)
     {
     case 1:
+        int id, rrn = 0 ;
+
+
+        char cabecalhoLixo [36]; // usado p/ pular o cabecaho inicial do aqv de leitura
+        char charLixo; // usado pra ler coisas inuteis
+        fgets (cabecalhoLixo, 36, stdin);
+        char *auxiliar = cabecalhoLixo;
+        char *arquivoLeituraNome = strtok_r(auxiliar, " ", &auxiliar);
+        char *arquivoEscritaNome = strtok_r(auxiliar, " ", &auxiliar);
+        char *arquivoIndexadoNome = strtok_r(auxiliar, " ", &auxiliar);
+        trim(arquivoLeituraNome);
+        trim(arquivoEscritaNome);
+        trim(arquivoIndexadoNome);
         
+
+        FILE *arquivoLeitura = fopen(arquivoLeituraNome "r");
+        if (arquivoLeitura == NULL){
+            printf("Falha no carregamento do arquivo de dados.\n");
+            return ERRO;
+        }
+
+        FILE *arquivoEscrita = fopen(arquivoEscritaNome, "wb");
+        if (arquivoEscrita == NULL){
+            printf("Falha no carregamento do arquivo de dados.\n");
+            return ERRO;
+        }
+        criarCabecalhoPessoa(arquivoEscrita); // criando cabecalho p/ arqv pessoa
+        Lista* lista = cria_lista(); //iniciando lista p indexacao
+
+        fseek(arquivoLeitura, 45, SEEK_SET); //pulando cabecalho do arquivo
+
+        while(fscanf(arquivoLeitura,"%d%*c", &id)>0){
+            struct RegistroPessoa *registro = (struct RegistroPessoa*)calloc(1,sizeof(struct RegistroPessoa));
+            registro->idPessoa = id;
+
+            char *nomePessoa = (char*)calloc(40, sizeof(char));
+            if(fscanf(arquivoLeitura, "%[^,]s", nomePessoa)>0){
+                trim(nomePessoa);
+                strncpy(registro->nomePessoa, nomePessoa, 39);
+
+                if(fscanf(arquivoLeitura, "%*c%d%*c", &registro->idadePessoa)<=0){//Para campos idadePessoa nulos
+                registro->idadePessoa = -9;
+                fscanf(arquivoLeitura, "%*c", lixo);
+            }
+            index->RRN = RRN++;
+            fscanf(arquivoLeitura, "%s", registro->twitterPessoa);
+            trim(registro->twitterPessoa);
+            inserirBinario(*registro, arquivoEscrita, lista);
+            free(registro);
+            free(nomePessoa);
+            }
+            
+            rewind(arqW);
+            //modificando o status do arquivo de '0' (dados inconsistentes) para '1' (dados consistentess)
+            charLixo = '1';
+            fwrite(&charLixo, sizeof(char), 1, arquivoEscrita);
+            fclose(arquivoLeitura);
+            fclose(arquivoEscrita);
+
         break;
     case 2:
         char nomeArquivo[11];
@@ -207,9 +265,6 @@ int main (){
 
         lerBinario (arquivo);
         break;
-    
-    default:
-        break;
     }
 
     if (arquivoLeitura == NULL){
@@ -222,6 +277,6 @@ int main (){
         }
 
     criarCabecalho(arquivo)
- */
+ 
     return OK;
 }
