@@ -8,6 +8,8 @@
     static char lixo = '$';
     static char nulo = '-';
     static char finalString = '\0';
+    static char zero = '0';
+    static char um = '1';
     static int TAM = 64;
     int ultimoRRN = 1;
 
@@ -66,10 +68,12 @@ int lerBinario (FILE* arquivo){
     switch (status)
     {
     case 0:
+        {
         printf("Falha no processamento do arquivo.");
         break;
-    
+        }
     case 1:
+        {
         fread(&quantidadePessoas, sizeof(int), 1, arquivo);
         fseek(arquivo, TAM, SEEK_SET); // posiciona a leitora no final do lixo '$' do cabeçalho
         for (int i = quantidadePessoas; i > 0; i--){
@@ -91,6 +95,7 @@ int lerBinario (FILE* arquivo){
             byteOfSetJump++;      
         }
         break;
+        }
     } 
     fseek(arquivo, TAM, SEEK_SET);
     return OK;
@@ -164,6 +169,7 @@ int criarCabecalhoPessoa(FILE *arquivo){
     return OK;
 }
 
+
 //Função que escreve cria o cabeçalho pessoa indexada com status "0" (ou seja arquivo inconsistente, pq não há dados) 
 int criarCabecalhoIndex(FILE *arquivo){
     if(arquivo == NULL){
@@ -173,8 +179,7 @@ int criarCabecalhoIndex(FILE *arquivo){
 
     rewind(arquivo);
 
-    char status = '0';
-    fwrite(&status, sizeof(char), 1, arquivo);
+    fwrite(&zero, sizeof(char), 1, arquivo);
 
     for(int i=0; i<7; i++){        
         fwrite(&lixo, sizeof(char), 1, arquivo);
@@ -183,19 +188,39 @@ int criarCabecalhoIndex(FILE *arquivo){
     return OK;
 }
 
+int criarArquivoIndexado(Lista* lista, FILE* arquivo){//Funcao que transcreve a lista dinamica pro arquivo indice
+    if(arquivo == NULL){
+        printf("Falha no carregamento do arquivo");
+        return ERRO;
+    }
+    if (lista == NULL || *lista == NULL){
+        printf("Falha no processamento do arquivo.");
+        return ERRO;
+    }
+    criarCabecalhoIndex (arquivo); //criando cabeçalho do arquivo
+    Elem *no = *li;
+    // preenchendo arquivo com dados indexados da lista
+    while(no != NULL){
+        fwrite(&no->idPessoa, sizeof(int), 1, arquivo);
+        fwrite(&no->RRN, sizeof(int), 1, arquivo);
+        no = no->prox;
+    }
+    //modificando o status do arquivo de '0' (dados inconsistentes) para '1' (dados consistentess)
+    rewind(arquivo);
+    fwrite(&um, sizeof(char), 1, arquivo);
+    return OK;
+}
 
 int main (){
 
     int funcionalidade;
     scanf("%d", &funcionalidade);
- 
+    int idPessoa = 0 , RRN = 0 ;
     switch (funcionalidade)
     {
     case 1:
-        int id, rrn = 0 ;
-
-
-        char cabecalhoLixo [36]; // usado p/ pular o cabecaho inicial do aqv de leitura
+        {
+        char cabecalhoLixo [36]; // usado p/ pular o cabecaLho inicial do aqv de leitura
         char charLixo; // usado pra ler coisas inuteis
         fgets (cabecalhoLixo, 36, stdin);
         char *auxiliar = cabecalhoLixo;
@@ -206,8 +231,8 @@ int main (){
         trim(arquivoEscritaNome);
         trim(arquivoIndexadoNome);
         
-
-        FILE *arquivoLeitura = fopen(arquivoLeituraNome "r");
+        //abrindo os arquivos de Leitura, Escrita e Indexação :)
+        FILE *arquivoLeitura = fopen(arquivoLeituraNome, "r");
         if (arquivoLeitura == NULL){
             printf("Falha no carregamento do arquivo de dados.\n");
             return ERRO;
@@ -218,23 +243,29 @@ int main (){
             printf("Falha no carregamento do arquivo de dados.\n");
             return ERRO;
         }
+        FILE *arquivoIndex = fopen(arquivoIndexadoNome, "wb");
+        if(arquivoIndex == NULL){
+            printf("Falha no carregamento do arquivo index\n");
+            return ERRO;
+        }
+
         criarCabecalhoPessoa(arquivoEscrita); // criando cabecalho p/ arqv pessoa
         Lista* lista = cria_lista(); //iniciando lista p indexacao
 
         fseek(arquivoLeitura, 45, SEEK_SET); //pulando cabecalho do arquivo
 
-        while(fscanf(arquivoLeitura,"%d%*c", &id)>0){
-            struct RegistroPessoa *registro = (struct RegistroPessoa*)calloc(1,sizeof(struct RegistroPessoa));
-            registro->idPessoa = id;
+        while(fscanf(arquivoLeitura,"%d%*c", &idPessoa)>0){
+            registroPessoa *registro = (registroPessoa*)calloc(1,sizeof(registroPessoa));
+            registro->idPessoa = idPessoa;
 
             char *nomePessoa = (char*)calloc(40, sizeof(char));
             if(fscanf(arquivoLeitura, "%[^,]s", nomePessoa)>0){
                 trim(nomePessoa);
                 strncpy(registro->nomePessoa, nomePessoa, 39);
-
-                if(fscanf(arquivoLeitura, "%*c%d%*c", &registro->idadePessoa)<=0){//Para campos idadePessoa nulos
-                registro->idadePessoa = -9;
-                fscanf(arquivoLeitura, "%*c", lixo);
+            }
+            if(fscanf(arquivoLeitura, "%*c%d%*c", &registro->idadePessoa)<=0){
+            registro->idadePessoa = -9;
+            fscanf(arquivoLeitura, "%*c", charLixo);
             }
             index->RRN = RRN++;
             fscanf(arquivoLeitura, "%s", registro->twitterPessoa);
@@ -242,17 +273,27 @@ int main (){
             inserirBinario(*registro, arquivoEscrita, lista);
             free(registro);
             free(nomePessoa);
-            }
+        }
             
-            rewind(arqW);
+            rewind(arquivoEscritaNome);
             //modificando o status do arquivo de '0' (dados inconsistentes) para '1' (dados consistentess)
             charLixo = '1';
             fwrite(&charLixo, sizeof(char), 1, arquivoEscrita);
             fclose(arquivoLeitura);
             fclose(arquivoEscrita);
 
+            //parte de indexacao 
+            criarArquivoIndexado(lista, FILE* arquivoIndex)
+            fclose(arquivoIndex);
+
+
+            //printando a saida solocida com a funcao fornecida
+            binarioNaTela1(arquivoEscritaNome, arquivoIndexadoNome);
         break;
+        }
     case 2:
+        {
+        /*
         char nomeArquivo[11];
         scanf("%s", nomeArquivo);
 
@@ -264,19 +305,10 @@ int main (){
         }
 
         lerBinario (arquivo);
+        */
         break;
+        }
     }
-
-    if (arquivoLeitura == NULL){
-            printf("Falha no carregamento do arquivo de dados.\n");
-            return ERRO;
-        }
-        if (arquivoEscrita == NULL){
-            printf("Falha no carregamento do arquivo de dados.\n");
-            return ERRO;
-        }
-
-    criarCabecalho(arquivo)
- 
     return OK;
+    
 }
