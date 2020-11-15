@@ -11,44 +11,41 @@
     static int TAM = 64;
     int ultimoRRN = 1;
 
-typedef struct {
+typedef struct registroPessoa{
 
     char removido;
     int idPessoa;
     char nomePessoa[40];
     int idadePessoa;
-    char twitterPessoa[15]
+    char twitterPessoa[15];
 
-}registroPessoa
+}registroPessoa;
 
 
 //Funcao para imprimir todos os dados de um registro
-void imprimeRegistro(struct registroPessoa *registro){
+void imprimeRegistro(registroPessoa *registro){
 
     printf("Dados da pessoa de código ");
-    if (registro->idPessoa == NULL){
-        printf("%d\n", &nulo);
-    }else{
-        printf ("%d\n", registro->idPessoa);
-    }
+    printf ("%d\n", registro->idPessoa);
+    
 
     printf("Nome: ");
     if (strlen(registro->nomePessoa) == 0){
-        printf("%d\n", &nulo);
+        printf("%c\n", nulo);
     }else{
         printf ("%s\n", registro->nomePessoa);
     }
 
     printf("Idade: ");
     if(registro->idadePessoa < 0){
-        printf("%d\n", &nulo);
+        printf("%c\n", nulo);
     } else if (registro->idadePessoa >= 0){
         printf("%d anos\n", registro->idadePessoa);
     }
 
     printf("Twitter: ");
     if (strlen(registro->twitterPessoa) == 0){
-        printf("%d\n", &nulo);
+        printf("%c\n", nulo);
     }else{
         printf("%s\n", registro->twitterPessoa);
     }
@@ -73,8 +70,8 @@ int lerBinario (FILE* arquivo){
         break;
     
     case 1:
-        fread(&quantidadePessoas, sizeof(int), 1, arq);
-        fseek(arqR, TAM, SEEK_SET); // posiciona a leitora no final do lixo '$' do cabeçalho
+        fread(&quantidadePessoas, sizeof(int), 1, arquivo);
+        fseek(arquivo, TAM, SEEK_SET); // posiciona a leitora no final do lixo '$' do cabeçalho
         for (int i = quantidadePessoas; i > 0; i--){
             fseek(arquivo, (byteOfSetJump + 1) * TAM, SEEK_SET);
             fread(&removido, sizeof(char), 1, arquivo); 
@@ -101,7 +98,7 @@ int lerBinario (FILE* arquivo){
 
 
 //Funcao que insere dados de todos os registros em um arquivo
-void inserirBinario(struct registroPessoa input,FILE *aquivo, Lista* lista){
+int inserirBinario(indexaPessoa index, registroPessoa registro, FILE* arquivo, Lista* lista){
     if(arquivo == NULL){
         printf("Falha no carregamento do arquivo.\n");
         return ERRO;
@@ -115,25 +112,29 @@ void inserirBinario(struct registroPessoa input,FILE *aquivo, Lista* lista){
     fwrite(&statusOFF, sizeof(char), 1 , arquivo);
     fwrite(&ultimoRRN, sizeof(int), 1, arquivo);
     //
-    fseek(arquivo, (input.RRN+1) * TAM, SEEK_SET);
+    fseek(arquivo, (index.RRN+1) * TAM, SEEK_SET);
+    
     //escrevendo campo removido como 1 (para indicar que o registro não está marcado como removido)
     fwrite(&removido, sizeof(char), 1, arquivo);
+    
     //escrevendo idPessoa
-    fwrite(&input.idPessoa, sizeof(int), 1, arquivo);
+    fwrite(&registro.idPessoa, sizeof(int), 1, arquivo);
+    
     //escrevendo nomePessoa e completando o que falta dos 40bytes com '$' 
-    fwrite(input.nome, sizeof(char), strlen(dados.nome), arquivo);
-    for(int i=0; i < 40 - strlen(input.nomePessoa) - 1; i++){//Preenche o resto do campo de lixo
+    fwrite(registro.nomePessoa, sizeof(char), strlen(registro.nomePessoa), arquivo);
+    for(int i=0; i < 40 - strlen(registro.nomePessoa) - 1; i++){
         fwrite(&lixo, sizeof(char), 1, arquivo);
     }
     //escrevendo idadePessoa
-    fwrite(&input.idadePessoa, sizeof(int), 1, arqW);
+    fwrite(&registro.idadePessoa, sizeof(int), 1, arquivo);
+    
     ///escrevendo twitterPessoa e completando o que falta dos 15bytes com '$'
-    fwrite(input.twitterPessoa, strlen(dinput.twitterPessoa)+1, 1, arqW);
-    for(int i=0; i < 15 - strlen(input.twitterPessoa) - 1; i++){//Preenche o resto do campo de lixo
+    fwrite(registro.twitterPessoa, strlen(registro.twitterPessoa)+1, 1, arquivo);
+    for(int i=0; i < 15 - strlen(registro.twitterPessoa) - 1; i++){
         fwrite(&lixo, sizeof(char), 1, arquivo);
     }
     //
-    insere_lista_ordenada(lista, input.idPessoa, input.RRN);
+    insere_lista_final(lista, index);
     rewind(arquivo);
     fwrite(&statusON, sizeof(char), 1 , arquivo);
 
@@ -141,7 +142,7 @@ void inserirBinario(struct registroPessoa input,FILE *aquivo, Lista* lista){
 }
 
 
-//Função que escreve cria o cabeçalho inicial com "0" pessoas e status "0" (ou seja arquivo inconsistente, pq não há pessoas) 
+//Função que escreve cria o cabeçalho pessoa com "0" pessoas e status "0" (ou seja arquivo inconsistente, pq não há pessoas) 
 int criarCabecalhoPessoa(FILE *arquivo){
     if(arquivo == NULL){
         printf("Falha no carregamento do arquivo.");
@@ -163,7 +164,7 @@ int criarCabecalhoPessoa(FILE *arquivo){
     return OK;
 }
 
-
+//Função que escreve cria o cabeçalho pessoa indexada com status "0" (ou seja arquivo inconsistente, pq não há dados) 
 int criarCabecalhoIndex(FILE *arquivo){
     if(arquivo == NULL){
         printf("Falha no carregamento do arquivo.");
@@ -172,8 +173,8 @@ int criarCabecalhoIndex(FILE *arquivo){
 
     rewind(arquivo);
 
-    int status = 0;
-    fwrite(status, sizeof(char), 1, arquivo);
+    char status = '0';
+    fwrite(&status, sizeof(char), 1, arquivo);
 
     for(int i=0; i<7; i++){        
         fwrite(&lixo, sizeof(char), 1, arquivo);
@@ -187,11 +188,11 @@ int main (){
 
     int funcionalidade;
     scanf("%d", &funcionalidade);
-
+/* 
     switch (funcionalidade)
     {
     case 1:
-        /* code */
+        
         break;
     case 2:
         char nomeArquivo[11];
@@ -221,6 +222,6 @@ int main (){
         }
 
     criarCabecalho(arquivo)
-
+ */
     return OK;
 }

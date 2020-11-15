@@ -34,9 +34,9 @@ typedef struct elemento Elem;
 typedef struct elemento* Lista;
 
 Lista* cria_lista();
-void libera_lista(Lista* li);
-int insere_lista_final(Lista* li, void *dt);
-int insere_lista_inicio(Lista* li, void *dt);
+//void libera_lista(Lista* li);
+int insere_lista_final(Lista* li, indexaPessoa dt);
+int insere_lista_inicio(Lista* li, indexaPessoa dt);
 int tamanho_lista(Lista* li);
 int lista_vazia(Lista* li);
-void imprime_lista(Lista* li, int tipo);
+//void imprime_lista(Lista* li, int tipo);

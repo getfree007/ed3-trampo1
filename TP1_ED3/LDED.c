@@ -17,7 +17,7 @@ Lista* cria_lista()
     return li;
 }
 
-void libera_lista(Lista* li)
+/*void libera_lista(Lista* li)
 {
     if (li != NULL)
 	{
@@ -26,14 +26,16 @@ void libera_lista(Lista* li)
 		{
             no = *li;
             *li = (*li)->prox;
+            free(no->dado.idPessoa);
+            free(no->dado.RRN);
             free(no->dado);
             free(no);
         }
         free(li);
     }
-}
+}*/
 
-int insere_lista_final(Lista* li, void *dt)
+int insere_lista_final(Lista* li, indexaPessoa dt)
 {
     Elem *no;
 
@@ -61,7 +63,7 @@ int insere_lista_final(Lista* li, void *dt)
     return OK;
 }
 
-int insere_lista_inicio(Lista* li, void *dt)
+int insere_lista_inicio(Lista* li, indexaPessoa dt)
 {
     if (li == NULL)
         return ERRO;
@@ -102,7 +104,7 @@ int lista_vazia(Lista* li)
     return FALSO;
 }
 
-void imprime_lista(Lista* li, int tipo)
+/*void imprime_lista(Lista* li, int tipo)
 {
     Elem* no = *li;
     Tipo_Dado_Int *ptrint;
@@ -139,4 +141,4 @@ void imprime_lista(Lista* li, int tipo)
         no = no->prox;
     }
     printf("-------------- FIM LISTA -----------------\n");
-}
+}*/
